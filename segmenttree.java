@@ -62,3 +62,78 @@
             }
         }
     }
+//================ second 
+public class NumArray {
+    class segNode {
+        int start, end;
+        segNode left, right;
+        int sum;
+        segNode(int start, int end) {
+            this.start = start;
+            this.end = end;
+            left = null;
+            right = null;
+            sum = 0;
+        }
+    }
+    segNode root = null;
+    public NumArray(int[] nums) {
+        root = buildTree(nums, 0, nums.length - 1);
+    }
+    public segNode buildTree(int[] nums, int start, int end){
+        if (start > end) {
+            return null;
+        } else {
+            segNode res = new segNode(start, end);
+            if (start == end) {
+                res.sum = nums[start];
+            } else {
+                int mid = start + (end - start) / 2;
+                res.left = buildTree(nums, start, mid);
+                res.right = buildTree(nums, mid + 1, end);
+                if (res.left != null && res.right != null)
+                res.sum = res.left.sum + res.right.sum;
+                if (res.left == null)
+                res.sum = res.right.sum;
+                if (res.right == null)
+                res.sum = res.left.sum;
+            }
+            return res;
+        }
+        
+    }
+
+    void update(int i, int val) {
+        update(root, i, val);
+    }
+    public void update(segNode root, int i, int val) {
+        if (root.start == root.end) {
+            root.sum = val;
+        } else {
+            int mid = root.start + (root.end - root.start) / 2;
+            if (mid < i) {
+                update(root.right, i, val);
+            } else {
+                update(root.left, i, val);
+            }
+            root.sum = root.left.sum + root.right.sum;
+        }
+    }
+
+    public int sumRange(int i, int j) {
+        return sumRange(root, i, j); 
+    }
+    public int sumRange(segNode root, int i, int j) {
+        if (root.start == i && root.end == j) {
+            return root.sum;
+        } else {
+            int mid = root.start + (root.end - root.start) / 2;
+            if (mid < i) {
+                return sumRange(root.right, i, j);
+            }
+            if (mid >= j) {
+                return sumRange(root.left, i, j);
+            }
+            return sumRange(root.left, i, mid) + sumRange(root.right, mid + 1, j);
+        }
+    }
