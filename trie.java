@@ -118,3 +118,33 @@ public class Trie {
     }
 }
 
+
+
+public class Solution {
+    public int longestConsecutive(int[] num) {
+         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for (int i = 0; i < num.length; i++) {
+            map.put(num[i], 0);
+        }
+        int maxcount = 0;
+        for (int i = 0; i < num.length; i++) {
+            int count = 1;
+            if (map.get(num[i]) == 0) {
+                int temp = num[i];
+                map.put(num[i], 1);
+                while(map.containsKey(++temp)) {
+                    count++;
+                    map.put(temp, 1);
+                }
+                temp = num[i];
+                while(map.containsKey(--temp)) {
+                    count++;
+                    map.put(temp, 1);
+                }
+            }
+            
+            maxcount = Math.max(count, maxcount);
+        }
+        return maxcount;
+    }
+}
